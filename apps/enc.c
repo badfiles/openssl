@@ -67,7 +67,9 @@
 #include <openssl/x509.h>
 #include <openssl/rand.h>
 #include <openssl/pem.h>
+#ifndef OPENSSL_NO_COMP
 #include <openssl/comp.h>
+#endif
 #include <ctype.h>
 
 int set_hex(char *in,unsigned char *out,int size);
@@ -330,6 +332,12 @@ bad:
 #ifndef OPENSSL_NO_ENGINE
         setup_engine(bio_err, engine, 0);
 #endif
+
+	if (cipher && EVP_CIPHER_flags(cipher) & EVP_CIPH_FLAG_AEAD_CIPHER)
+		{
+		BIO_printf(bio_err, "AEAD ciphers not supported by the enc utility\n");
+		goto end;
+		}
 
 	if (md && (dgst=EVP_get_digestbyname(md)) == NULL)
 		{

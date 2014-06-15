@@ -272,6 +272,7 @@ static const SSL_CIPHER cipher_aliases[]={
 	{0,SSL_TXT_aGOST94,0,0,SSL_aGOST94,0,0,0,0,0,0,0},
 	{0,SSL_TXT_aGOST01,0,0,SSL_aGOST01,0,0,0,0,0,0,0},
 	{0,SSL_TXT_aGOST,0,0,SSL_aGOST94|SSL_aGOST01,0,0,0,0,0,0,0},
+	{0,SSL_TXT_aSRP,0,    0,SSL_aSRP,  0,0,0,0,0,0,0},
 
 	/* aliases combining key exchange and server authentication */
 	{0,SSL_TXT_EDH,0,     SSL_kDHE,~SSL_aNULL,0,0,0,0,0,0,0},
@@ -581,7 +582,7 @@ int ssl_cipher_get_evp(const SSL_SESSION *s, const EVP_CIPHER **enc,
 		break;
 		}
 
-	if ((i < 0) || (i > SSL_ENC_NUM_IDX))
+	if ((i < 0) || (i >= SSL_ENC_NUM_IDX))
 		*enc=NULL;
 	else
 		{
@@ -615,7 +616,7 @@ int ssl_cipher_get_evp(const SSL_SESSION *s, const EVP_CIPHER **enc,
 		i= -1;
 		break;
 		}
-	if ((i < 0) || (i > SSL_MD_NUM_IDX))
+	if ((i < 0) || (i >= SSL_MD_NUM_IDX))
 	{
 		*md=NULL; 
 		if (mac_pkey_type!=NULL) *mac_pkey_type = NID_undef;
@@ -1738,6 +1739,9 @@ char *SSL_CIPHER_description(const SSL_CIPHER *cipher, char *buf, int len)
 		break;
 	case SSL_aPSK:
 		au="PSK";
+		break;
+	case SSL_aSRP:
+		au="SRP";
 		break;
 	default:
 		au="unknown";

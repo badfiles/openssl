@@ -266,6 +266,7 @@ extern "C" {
 #define SSL_TXT_aGOST94	"aGOST94"
 #define SSL_TXT_aGOST01 "aGOST01"
 #define SSL_TXT_aGOST  "aGOST"
+#define SSL_TXT_aSRP            "aSRP"
 
 #define	SSL_TXT_DSS		"DSS"
 #define SSL_TXT_DH		"DH"
@@ -662,7 +663,7 @@ struct ssl_session_st
 /* Allow initial connection to servers that don't support RI */
 #define SSL_OP_LEGACY_SERVER_CONNECT			0x00000004L
 #define SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG		0x00000008L
-#define SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG		0x00000010L
+#define SSL_OP_TLSEXT_PADDING				0x00000010L
 #define SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER		0x00000020L
 #define SSL_OP_SAFARI_ECDHE_ECDSA_BUG			0x00000040L
 #define SSL_OP_SSLEAY_080_CLIENT_DH_BUG			0x00000080L
@@ -671,6 +672,8 @@ struct ssl_session_st
 
 /* Hasn't done anything since OpenSSL 0.9.7h, retained for compatibility */
 #define SSL_OP_MSIE_SSLV2_RSA_PADDING			0x0
+/* Refers to ancient SSLREF and SSLv2, retained for compatibility */
+#define SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG		0x0
 
 /* Disable SSL 3.0/TLS 1.0 CBC vulnerability workaround that was added
  * in OpenSSL 0.9.6d.  Usually (depending on the application protocol)
@@ -2235,6 +2238,7 @@ int	SSL_SESSION_print_fp(FILE *fp,const SSL_SESSION *ses);
 #endif
 #ifndef OPENSSL_NO_BIO
 int	SSL_SESSION_print(BIO *fp,const SSL_SESSION *ses);
+int	SSL_SESSION_print_keylog(BIO *bp, const SSL_SESSION *x);
 #endif
 void	SSL_SESSION_free(SSL_SESSION *ses);
 int	i2d_SSL_SESSION(SSL_SESSION *in,unsigned char **pp);

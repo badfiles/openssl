@@ -455,6 +455,14 @@ for (;;)
 	}
 close(IN);
 
+if ($orig_platform eq 'copy')
+	{
+	# Remove opensslconf.h so it doesn't get updated if we configure a
+	# different branch.
+	$exheader =~ s/[^ ]+\/opensslconf.h//;
+	$header =~ s/[^ ]+\/opensslconf.h//;
+	}
+
 if ($fips)
 	{
 
@@ -756,6 +764,7 @@ $banner
 # This needs to be invoked once, when the makefile is first constructed, or
 # after cleaning.
 init: \$(TMP_D) \$(LIB_D) \$(INC_D) \$(INCO_D) \$(BIN_D) \$(TEST_D) headers
+	\$(PERL) \$(SRC_D)/util/copy-if-different.pl "\$(SRC_D)/crypto/opensslconf.h" "\$(INCO_D)/opensslconf.h"
 
 headers: \$(HEADER) \$(EXHEADER)
 
